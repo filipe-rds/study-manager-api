@@ -102,3 +102,10 @@ class TestCompleted:
         topic = Topic(title="Test Topic", estimated_hours=5)
 
         assert topic.completed is False
+
+    def test_should_mark_topic_as_completed(self) -> None:
+        topic = Topic(title="Test Topic", estimated_hours=5)
+
+        topic.mark_as_completed()
+
+        assert topic.completed is True

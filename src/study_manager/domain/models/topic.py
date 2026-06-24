@@ -31,3 +31,6 @@ class Topic:
     @property
     def completed(self) -> bool:
         return self._completed
+
+    def mark_as_completed(self) -> None:
+        self._completed = True
