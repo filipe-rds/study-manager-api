@@ -3,8 +3,8 @@ from uuid import UUID
 import pytest
 
 from study_manager.domain.exceptions.topic_errors import (
-    TopicAlreadyExists,
-    TopicNotFound,
+    TopicAlreadyExistsError,
+    TopicNotFoundError,
 )
 from study_manager.domain.models.subject import Subject
 from study_manager.domain.models.topic import Topic
@@ -92,21 +92,42 @@ class TestTopics:
         topic_database_more_hours = Topic(title="DB", estimated_hours=80)
 
         with pytest.raises(
-            TopicAlreadyExists,
+            TopicAlreadyExistsError,
             match="Topic with title 'DB' already exists",
         ):
             Subject(
                 name="Test Subject", topics=[topic_database, topic_database_more_hours]
             )
 
-    def test_should_reject_initialize_invalid_type_of_data_estruture_in_topics(
-        self,
+    @pytest.mark.parametrize(
+        "invalid_topics",
+        [
+            "invalid",
+            {"POO": Topic(title="POO", estimated_hours=5)},
+            {Topic(title="POO", estimated_hours=5)},
+            123,
+        ],
+    )
+    def test_should_reject_invalid_topics_collection_type(
+        self, invalid_topics: object
     ) -> None:
-        with pytest.raises(
-            TypeError,
-            match="Topics must be a list or tuple",
-        ):
-            Subject(name="Test Subject", topics="test")  # ty:ignore[invalid-argument-type]
+        with pytest.raises(TypeError, match="Topics must be a list or tuple"):
+            Subject(name="Test Subject", topics=invalid_topics)  # ty:ignore[invalid-argument-type]
+
+    @pytest.mark.parametrize(
+        "invalid_topics",
+        [
+            ("Tuple not contains Topic"),
+            (True),
+            (123),
+            ["list not contains Topic"],
+            [False],
+            (1337),
+        ],
+    )
+    def test_should_reject_invalid_data_topics(self, invalid_topics: object) -> None:
+        with pytest.raises(TypeError, match="Topics must contain only Topic instances"):
+            Subject(name="Test Subject", topics=[invalid_topics])  # ty:ignore[invalid-argument-type]
 
     def test_should_add_valid_topics(self) -> None:
         subject = Subject(name="Test Subject")
@@ -157,7 +178,7 @@ class TestTopics:
         subject.add_topic(topic_database)
 
         with pytest.raises(
-            TopicAlreadyExists,
+            TopicAlreadyExistsError,
             match="Topic with title 'DB' already exists",
         ):
             subject.add_topic(topic_database_more_hours)
@@ -185,7 +206,7 @@ class TestTopics:
         subject.add_topic(topic_database)
 
         with pytest.raises(
-            TopicNotFound,
+            TopicNotFoundError,
             match="No such topic with title 'NON_EXISTING_TOPIC'",
         ):
             subject.get_topic_by_title("NON_EXISTING_TOPIC")
