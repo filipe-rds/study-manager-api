@@ -1,8 +1,8 @@
 from uuid import UUID
 
 from study_manager.domain.exceptions.topic_errors import (
-    TopicAlreadyExists,
-    TopicNotFound,
+    TopicAlreadyExistsError,
+    TopicNotFoundError,
 )
 from study_manager.domain.models.topic import Topic
 from study_manager.domain.validators.identity_validators import resolve_id
@@ -49,13 +49,13 @@ class Subject:
 
     def add_topic(self, topic: Topic) -> None:
         if self._has_topic(topic.title):
-            raise TopicAlreadyExists(topic.title)
+            raise TopicAlreadyExistsError(topic.title)
 
         self._topics[topic.title] = topic
 
     def get_topic_by_title(self, title: str) -> Topic:
         if not self._has_topic(title):
-            raise TopicNotFound(title)
+            raise TopicNotFoundError(title)
 
         return self._topics[title]
 

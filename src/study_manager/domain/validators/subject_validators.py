@@ -1,4 +1,4 @@
-from study_manager.domain.exceptions.topic_errors import TopicAlreadyExists
+from study_manager.domain.exceptions.topic_errors import TopicAlreadyExistsError
 from study_manager.domain.models.topic import Topic
 
 
@@ -26,7 +26,7 @@ def resolve_topics(topics: list[Topic] | tuple[Topic, ...] | None) -> dict[str, 
             raise TypeError("Topics must contain only Topic instances")
 
         if topic.title in topics_dict:
-            raise TopicAlreadyExists(topic.title)
+            raise TopicAlreadyExistsError(topic.title)
 
         topics_dict[topic.title] = topic
 
