@@ -17,13 +17,5 @@ module-name = "study_manager"
 dev = [
     "pytest>=9.1.1",
     "ruff>=0.15.19",
-    "taskipy>=1.14.1",
     "ty>=0.0.52",
 ]
-
-[tool.taskipy.tasks]
-format = "ruff format"
-lint = "ruff check"
-typecheck = "ty check"
-test = "python -m pytest tests"
-check = "task format && task lint && task typecheck && task test"
