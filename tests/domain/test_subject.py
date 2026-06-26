@@ -80,9 +80,7 @@ class TestTopics:
         assert subject.completed is False
 
     @pytest.mark.parametrize("collection_type", [list, tuple])
-    def test_should_initialize_with_valid_topics(
-        self, collection_type: type[list[Topic]] | type[tuple[Topic, ...]]
-    ) -> None:
+    def test_should_initialize_with_valid_topics(self, collection_type: type) -> None:
         topic_oop = Topic(title="OOP", estimated_hours=5)
         topic_database = Topic(title="DB", estimated_hours=5)
 
@@ -95,7 +93,7 @@ class TestTopics:
 
     @pytest.mark.parametrize("collection_type", [list, tuple])
     def test_should_reject_initialize_duplicate_topics(
-        self, collection_type: type[list[Topic]] | type[tuple[Topic, ...]]
+        self, collection_type: type
     ) -> None:
         topic_database = Topic(title="DB", estimated_hours=5)
         topic_database_more_hours = Topic(title="DB", estimated_hours=80)
