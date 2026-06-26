@@ -60,16 +60,16 @@ class TestTitle:
         ],
     )
     def test_should_strip_title_surrounding_whitespace(
-        self, title_with_whitespace: object
+        self, title_with_whitespace: str
     ) -> None:
-        topic = Topic(title=title_with_whitespace, estimated_hours=5)  # ty:ignore[invalid-argument-type]
+        topic = Topic(title=title_with_whitespace, estimated_hours=5)
 
         assert topic.title == "Test Topic"
 
     @pytest.mark.parametrize("invalid_title", ["", "                          "])
-    def test_should_reject_invalid_string_title(self, invalid_title: object) -> None:
+    def test_should_reject_invalid_string_title(self, invalid_title: str) -> None:
         with pytest.raises(ValueError, match="Title is required"):
-            Topic(title=invalid_title, estimated_hours=77)  # ty:ignore[invalid-argument-type]
+            Topic(title=invalid_title, estimated_hours=77)
 
     @pytest.mark.parametrize(
         "invalid_title",
@@ -112,12 +112,12 @@ class TestEstimatedHours:
 
     @pytest.mark.parametrize("invalid_estimated_hours", [0, -77])
     def test_should_reject_not_positive_integer_estimated_hours(
-        self, invalid_estimated_hours: object
+        self, invalid_estimated_hours: int
     ) -> None:
         with pytest.raises(
             ValueError, match="Estimated hours must be a positive integer"
         ):
-            Topic(title="Test Topic", estimated_hours=invalid_estimated_hours)  # ty:ignore[invalid-argument-type]
+            Topic(title="Test Topic", estimated_hours=invalid_estimated_hours)
 
 
 class TestCompleted:
