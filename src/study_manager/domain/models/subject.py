@@ -46,6 +46,11 @@ class Subject:
 
         self._topics[topic.title] = topic
 
+    def remove_topic(self, topic: Topic) -> None:
+        if not self._has_topic(topic.title):
+            raise TopicNotFoundError(topic.title)
+        self._topics.pop(topic.title)
+
     def get_topic_by_title(self, title: str) -> Topic:
         if not self._has_topic(title):
             raise TopicNotFoundError(title)

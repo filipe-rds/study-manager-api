@@ -83,7 +83,7 @@ class TestTopics:
     def test_should_initialize_with_valid_topics(
         self, collection_type: type[list[Topic]] | type[tuple[Topic, ...]]
     ) -> None:
-        topic_oop = Topic(title="POO", estimated_hours=5)
+        topic_oop = Topic(title="OOP", estimated_hours=5)
         topic_database = Topic(title="DB", estimated_hours=5)
 
         topics = collection_type([topic_oop, topic_database])
@@ -91,7 +91,7 @@ class TestTopics:
         subject = Subject(name="Test Subject", topics=topics)
 
         assert subject.count_topics() == 2
-        assert {topic.title for topic in subject.list_topics()} == {"POO", "DB"}
+        assert {topic.title for topic in subject.list_topics()} == {"OOP", "DB"}
 
     @pytest.mark.parametrize("collection_type", [list, tuple])
     def test_should_reject_initialize_duplicate_topics(
@@ -112,8 +112,8 @@ class TestTopics:
         "invalid_topics",
         [
             "invalid",
-            {"POO": Topic(title="POO", estimated_hours=5)},
-            {"POO"},
+            {"OOP": Topic(title="OOP", estimated_hours=5)},
+            {"OOP"},
             123,
         ],
     )
@@ -143,7 +143,7 @@ class TestTopics:
     def test_should_add_valid_topics(self) -> None:
         subject = Subject(name="Test Subject")
 
-        topic_oop = Topic(title="POO", estimated_hours=5)
+        topic_oop = Topic(title="OOP", estimated_hours=5)
         topic_database = Topic(title="DB", estimated_hours=5)
 
         subject.add_topic(topic_oop)
@@ -154,7 +154,7 @@ class TestTopics:
     def test_should_list_all_topics(self) -> None:
         subject = Subject(name="Test Subject")
 
-        topic_oop = Topic(title="POO", estimated_hours=5)
+        topic_oop = Topic(title="OOP", estimated_hours=5)
         topic_database = Topic(title="DB", estimated_hours=5)
 
         subject.add_topic(topic_oop)
@@ -162,14 +162,14 @@ class TestTopics:
 
         topics = subject.list_topics()
 
-        assert {topic.title for topic in topics} == {"POO", "DB"}
+        assert {topic.title for topic in topics} == {"OOP", "DB"}
         assert len(topics) == 2
         assert subject.count_topics() == 2
 
     def test_should_not_expose_mutable_internal_collection(self):
         subject = Subject(name="Test Subject")
 
-        topic_oop = Topic(title="POO", estimated_hours=5)
+        topic_oop = Topic(title="OOP", estimated_hours=5)
         topic_database = Topic(title="DB", estimated_hours=5)
 
         subject.add_topic(topic_oop)
@@ -197,7 +197,7 @@ class TestTopics:
     def test_should_get_topic_by_title(self) -> None:
         subject = Subject(name="Test Subject")
 
-        topic_oop = Topic(title="POO", estimated_hours=5)
+        topic_oop = Topic(title="OOP", estimated_hours=5)
         topic_database = Topic(title="DB", estimated_hours=5)
 
         subject.add_topic(topic_oop)
@@ -210,7 +210,7 @@ class TestTopics:
     def test_should_reject_search_topic_for_non_existing_title(self) -> None:
         subject = Subject(name="Test Subject")
 
-        topic_oop = Topic(title="POO", estimated_hours=5)
+        topic_oop = Topic(title="OOP", estimated_hours=5)
         topic_database = Topic(title="DB", estimated_hours=5)
 
         subject.add_topic(topic_oop)
@@ -222,12 +222,40 @@ class TestTopics:
         ):
             subject.get_topic_by_title("NON_EXISTING_TOPIC")
 
+    def test_should_remove_existing_topic(self) -> None:
+        subject = Subject(name="Test Subject")
+
+        topic_oop = Topic(title="OOP", estimated_hours=5)
+        topic_database = Topic(title="DB", estimated_hours=5)
+
+        subject.add_topic(topic_oop)
+        subject.add_topic(topic_database)
+
+        subject.remove_topic(topic_database)
+
+        assert subject.count_topics() == 1
+        assert {topic.title for topic in subject.list_topics()} == {"OOP"}
+
+    def test_should_reject_remove_non_existing_topic(self) -> None:
+        subject = Subject(name="Test Subject")
+
+        topic_oop = Topic(title="OOP", estimated_hours=5)
+        topic_database = Topic(title="DB", estimated_hours=5)
+
+        subject.add_topic(topic_oop)
+
+        with pytest.raises(
+            TopicNotFoundError,
+            match="No such topic with title 'DB'",
+        ):
+            subject.remove_topic(topic_database)
+
 
 class TestCompleted:
     def test_should_return_true_when_all_topics_are_completed(self) -> None:
         subject = Subject(name="Test Subject")
 
-        topic_oop = Topic(title="POO", estimated_hours=5)
+        topic_oop = Topic(title="OOP", estimated_hours=5)
         topic_database = Topic(title="DB", estimated_hours=5)
 
         subject.add_topic(topic_oop)
@@ -241,7 +269,7 @@ class TestCompleted:
     def test_should_return_false_when_are_topics_not_completed(self) -> None:
         subject = Subject(name="Test Subject")
 
-        topic_oop = Topic(title="POO", estimated_hours=5)
+        topic_oop = Topic(title="OOP", estimated_hours=5)
         topic_database = Topic(title="DB", estimated_hours=5)
 
         subject.add_topic(topic_oop)
