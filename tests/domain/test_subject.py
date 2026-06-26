@@ -162,11 +162,11 @@ class TestTopics:
 
         topics = subject.list_topics()
 
-        assert {topic.title for topic in topics} == {"OOP", "DB"}
         assert len(topics) == 2
-        assert subject.count_topics() == 2
+        assert type(topics) is tuple
+        assert {topic.title for topic in topics} == {"OOP", "DB"}
 
-    def test_should_not_expose_mutable_internal_collection(self):
+    def test_should_not_expose_mutable_internal_collection(self) -> None:
         subject = Subject(name="Test Subject")
 
         topic_oop = Topic(title="OOP", estimated_hours=5)
