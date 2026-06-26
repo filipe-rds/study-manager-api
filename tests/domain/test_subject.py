@@ -166,20 +166,6 @@ class TestTopics:
         assert type(topics) is tuple
         assert {topic.title for topic in topics} == {"OOP", "DB"}
 
-    def test_should_not_expose_mutable_internal_collection(self) -> None:
-        subject = Subject(name="Test Subject")
-
-        topic_oop = Topic(title="OOP", estimated_hours=5)
-        topic_database = Topic(title="DB", estimated_hours=5)
-
-        subject.add_topic(topic_oop)
-        subject.add_topic(topic_database)
-
-        topics = subject.list_topics()
-
-        assert type(topics) is tuple
-        assert len(topics) == 2
-
     def test_should_reject_duplicate_topics(self) -> None:
         subject = Subject(name="Test Subject")
 
