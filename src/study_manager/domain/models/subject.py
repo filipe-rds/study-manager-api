@@ -33,19 +33,12 @@ class Subject:
 
     @property
     def completed(self) -> bool:
-        if self.count_topics() == 0:
-            return False
-
-        if all(topic.completed for topic in self._topics.values()):
-            return True
-
-        return False
+        return self.count_topics() > 0 and all(
+            topic.completed for topic in self._topics.values()
+        )
 
     def _has_topic(self, title: str) -> bool:
-        if title not in self._topics:
-            return False
-
-        return True
+        return title in self._topics
 
     def add_topic(self, topic: Topic) -> None:
         if self._has_topic(topic.title):

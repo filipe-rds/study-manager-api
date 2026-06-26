@@ -126,12 +126,12 @@ class TestTopics:
     @pytest.mark.parametrize(
         "invalid_topics",
         [
-            ("Tuple not contains", "Topic"),
+            ("not", "topics"),
             (True, False),
-            (123, 1337),
-            ["list not contains Topic", "sorry"],
+            (123, 456),
+            ["not", "topics"],
             [True, False],
-            [777, 666],
+            [123, 456],
         ],
     )
     def test_should_reject_topics_collection_with_invalid_items(
