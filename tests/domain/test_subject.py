@@ -79,32 +79,41 @@ class TestTopics:
         assert subject.count_topics() == 0
         assert subject.completed is False
 
-    def test_should_initialize_with_topics(self) -> None:
+    @pytest.mark.parametrize("collection_type", [list, tuple])
+    def test_should_initialize_with_valid_topics(
+        self, collection_type: type[list[Topic]] | type[tuple[Topic, ...]]
+    ) -> None:
         topic_oop = Topic(title="POO", estimated_hours=5)
         topic_database = Topic(title="DB", estimated_hours=5)
 
-        subject = Subject(name="Test Subject", topics=[topic_oop, topic_database])
+        topics = collection_type([topic_oop, topic_database])
+
+        subject = Subject(name="Test Subject", topics=topics)
 
         assert subject.count_topics() == 2
+        assert {topic.title for topic in subject.list_topics()} == {"POO", "DB"}
 
-    def test_should_reject_initialize_duplicate_topics(self) -> None:
+    @pytest.mark.parametrize("collection_type", [list, tuple])
+    def test_should_reject_initialize_duplicate_topics(
+        self, collection_type: type[list[Topic]] | type[tuple[Topic, ...]]
+    ) -> None:
         topic_database = Topic(title="DB", estimated_hours=5)
         topic_database_more_hours = Topic(title="DB", estimated_hours=80)
+
+        topics = collection_type([topic_database, topic_database_more_hours])
 
         with pytest.raises(
             TopicAlreadyExistsError,
             match="Topic with title 'DB' already exists",
         ):
-            Subject(
-                name="Test Subject", topics=[topic_database, topic_database_more_hours]
-            )
+            Subject(name="Test Subject", topics=topics)
 
     @pytest.mark.parametrize(
         "invalid_topics",
         [
             "invalid",
             {"POO": Topic(title="POO", estimated_hours=5)},
-            {Topic(title="POO", estimated_hours=5)},
+            {"POO"},
             123,
         ],
     )
@@ -117,17 +126,19 @@ class TestTopics:
     @pytest.mark.parametrize(
         "invalid_topics",
         [
-            ("Tuple not contains Topic"),
-            (True),
-            (123),
-            ["list not contains Topic"],
-            [False],
-            (1337),
+            ("Tuple not contains", "Topic"),
+            (True, False),
+            (123, 1337),
+            ["list not contains Topic", "sorry"],
+            [True, False],
+            [777, 666],
         ],
     )
-    def test_should_reject_invalid_data_topics(self, invalid_topics: object) -> None:
+    def test_should_reject_topics_collection_with_invalid_items(
+        self, invalid_topics: object
+    ) -> None:
         with pytest.raises(TypeError, match="Topics must contain only Topic instances"):
-            Subject(name="Test Subject", topics=[invalid_topics])  # ty:ignore[invalid-argument-type]
+            Subject(name="Test Subject", topics=invalid_topics)  # ty:ignore[invalid-argument-type]
 
     def test_should_add_valid_topics(self) -> None:
         subject = Subject(name="Test Subject")
