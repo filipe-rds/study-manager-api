@@ -10,6 +10,6 @@ typecheck:
 	uv run ty check
 
 test:
-	uv run python -m pytest tests
+	uv run pytest tests
 
 check: format lint typecheck test
