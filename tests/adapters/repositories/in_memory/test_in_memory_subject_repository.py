@@ -1,11 +1,11 @@
-from uuid import UUID
-
-from study_manager.domain.models.subject import Subject
 import pytest
+from uuid import UUID
 
 from study_manager.adapters.repositories.in_memory.in_memory_subject_repository import (
     InMemorySubjectRepository,
 )
+
+from study_manager.domain.models.subject import Subject
 
 
 @pytest.fixture
@@ -85,6 +85,7 @@ class TestRemove:
         assert repository.find_by_id(subject_oop.id) is None
         assert len(subject_list) == 1
         assert type(subject_list) is tuple
+        assert {subject.id for subject in subject_list} == {subject_database.id}
 
     def test_should_not_raise_error_when_subject_does_not_exist(
         self, repository: InMemorySubjectRepository
