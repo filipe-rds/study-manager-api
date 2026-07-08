@@ -41,7 +41,7 @@ class TestFindById:
 
 
 class TestListAll:
-    def test_should_return_empty_list_when_repository_is_empty(
+    def test_should_return_empty_tuple_when_repository_is_empty(
         self, repository: InMemorySubjectRepository
     ) -> None:
         subject_list = repository.list_all()
@@ -49,7 +49,7 @@ class TestListAll:
         assert len(subject_list) == 0
         assert type(subject_list) is tuple
 
-    def test_should_return_list_of_subjects(
+    def test_should_return_tuple_of_subjects(
         self, repository: InMemorySubjectRepository
     ) -> None:
         subject_oop = Subject(name="OOP")
@@ -62,6 +62,10 @@ class TestListAll:
 
         assert len(subject_list) == 2
         assert type(subject_list) is tuple
+        assert {subject.id for subject in subject_list} == {
+            subject_oop.id,
+            subject_database.id,
+        }
 
 
 class TestRemove:
@@ -81,3 +85,12 @@ class TestRemove:
         assert repository.find_by_id(subject_oop.id) is None
         assert len(subject_list) == 1
         assert type(subject_list) is tuple
+
+    def test_should_not_raise_error_when_subject_does_not_exist(
+        self, repository: InMemorySubjectRepository
+    )-> None:
+        subject_id = UUID("01943f7e-7c2b-7c0e-9f7b-2d5fd7a7a9d1")
+
+        repository.remove(subject_id)
+
+        assert repository.find_by_id(subject_id) is None

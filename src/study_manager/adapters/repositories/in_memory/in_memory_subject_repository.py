@@ -18,4 +18,4 @@ class InMemorySubjectRepository(SubjectRepository):
         return tuple(self._subjects.values())
 
     def remove(self, subject_id: UUID) -> None:
-        self._subjects.pop(subject_id)
+        self._subjects.pop(subject_id, None)
