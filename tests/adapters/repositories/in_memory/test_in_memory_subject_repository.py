@@ -88,7 +88,7 @@ class TestRemove:
 
     def test_should_not_raise_error_when_subject_does_not_exist(
         self, repository: InMemorySubjectRepository
-    )-> None:
+    ) -> None:
         subject_id = UUID("01943f7e-7c2b-7c0e-9f7b-2d5fd7a7a9d1")
 
         repository.remove(subject_id)
