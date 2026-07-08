@@ -18,10 +18,12 @@ class Subject:
         name: str,
         topics: list[Topic] | tuple[Topic, ...] | None = None,
         subject_id: UUID | None = None,
+        user_id: UUID | None = None,
     ) -> None:
         self._id = resolve_id(subject_id)
         self._name = validate_name(name)
         self._topics = resolve_topics(topics)
+        self._user_id = user_id
 
     @property
     def id(self) -> UUID:
@@ -30,6 +32,10 @@ class Subject:
     @property
     def name(self) -> str:
         return self._name
+
+    @property
+    def user_id(self) -> UUID | None:
+        return self._user_id
 
     @property
     def completed(self) -> bool:
