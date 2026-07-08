@@ -1,5 +1,3 @@
-from study_manager.domain.exceptions.subject_errors import SubjectAlreadyExistsError
-from study_manager.domain.models.subject import Subject
 import re
 
 
@@ -24,27 +22,3 @@ def validate_email(email: str) -> str:
         raise ValueError("Email must be a valid email address")
 
     return email.strip()
-
-
-def resolve_subjects(
-    subjects: list[Subject] | tuple[Subject, ...] | None,
-) -> dict[str, Subject]:
-
-    if subjects is None:
-        return {}
-
-    if type(subjects) is not list and type(subjects) is not tuple:
-        raise TypeError("Subjects must be a list or tuple")
-
-    subjects_dict = {}
-
-    for subject in subjects:
-        if type(subject) is not Subject:
-            raise TypeError("Subjects must contains only Subject instances")
-
-        if subject.name in subjects_dict:
-            raise SubjectAlreadyExistsError(subject.name)
-
-        subjects_dict[subject.name] = subject
-
-    return subjects_dict

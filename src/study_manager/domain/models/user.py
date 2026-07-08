@@ -1,9 +1,10 @@
-from study_manager.domain.validators.user_validators import (
-    validate_name,
-    validate_email,
-)
-from study_manager.domain.validators.identity_validators import resolve_id
 from uuid import UUID
+
+from study_manager.domain.validators.identity_validators import resolve_id
+from study_manager.domain.validators.user_validators import (
+    validate_email,
+    validate_name,
+)
 
 
 class User:
